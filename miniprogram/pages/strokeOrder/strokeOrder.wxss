@@ -1,0 +1,85 @@
+/* pages/strokeOrder/strokeOrder.wxss */
+
+/* 汉字笔顺展示区 */
+.storke-order-content {
+    /* 正方形展示区 */
+    height: 750rpx;
+    border: 1rpx solid red;
+}
+.storke-order {
+    height: 100%;
+}
+/*  中间操作区 */
+.middle {
+    padding-top: 10rpx;
+    text-align: center;
+    position: relative;
+}
+.simple-chinese-btn {
+    border-radius: 30px 0 0 30px;
+}
+.simple-chinese-btn::after {
+    border: none;
+}
+
+.traditional-chinese-btn {
+    border-radius: 0 30px 30px 0;
+}
+.traditional-chinese-btn::after {
+    border: none;
+}
+.selected-btn {
+    border: 1px solid #409EFF;
+    background-color: #409EFF;
+    color: white;
+}
+.selected-btn-hover {
+    background-color: #3a8ee6;
+}
+.unselected-btn {
+    border: 1px solid #409EFF;
+    background-color: #f8f8f8;
+    color: #409EFF;
+}
+
+.unselected-btn-hover {
+    background-color: #dedede;
+}
+.practice-btn {
+    position: fixed;
+    right: 3rpx;
+}
+
+/* 底部 */
+.bottom {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+}
+.current-c {
+    text-align: center;
+    line-height: 80px;
+    width: 80px;
+    height: 80px;
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    font-size: 50px;
+    border: 1px solid red;
+}
+/* 搜索层 */
+.search-layer {
+    position: fixed;
+    top:0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(200, 200, 200, 0.9)
+}
+.search-input {
+    color: black;
+    margin: 10px 4px 0;
+    background-color: white;
+    padding: 5px 0 5px 10px;
+    border-radius: 10px;
+}

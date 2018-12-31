@@ -1,0 +1,31 @@
+<!-- pages/strokeOrder/strokeOrder.wxml -->
+<view class="storke-order-content">
+    <swiper indicator-dots="true" class="storke-order" current-item-id="{{isSimple? 'simple':'traditional'}}" bindchange='swiperChange'>
+        <swiper-item item-id='simple'>
+            <image src='{{simpleSvg}}' style="height:100%; width:100%;"/>
+        </swiper-item>
+        <swiper-item item-id='traditional'>
+            <image src='{{traditionalSvg}}' style="height: 100%;width:100%;" />
+        </swiper-item>
+    </swiper>
+</view>
+<!-- 繁、简体切换区。练习 button -->
+<view class="middle">
+    <button size="mini" class="{{isSimple?'selected-btn':'unselected-btn' }} simple-chinese-btn" hover-class="selected-btn-hover" bindtap="switchToSimple">
+        简
+    </button>
+    <button size="mini" class="{{isSimple?'unselected-btn':'selected-btn' }} traditional-chinese-btn" hover-class="unselected-btn-hover" bindtap="switchToTraditional">
+        繁
+    </button>
+    <button size="mini" type="primary" class="practice-btn">练习</button>
+</view>
+<!-- 当前输入的字、随机的字。搜索按钮 -->
+<view class="bottom">
+    <view class="current-c" bindtap="search">
+        <text>{{character}}</text>
+    </view>
+</view>
+<!-- 搜索层 -->
+<view class="search-layer" hidden="{{!showSearch}}">
+    <input class="search-input" maxlength='1' bindconfirm='startSearch' bindblur='cancelSearch' focus="{{searchInputFocus}}"/>
+</view>
