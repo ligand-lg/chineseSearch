@@ -1,6 +1,6 @@
 // pages/strokeOrder/strokeOrder.js
 
-import {generationSVG, Base64, ChartTranslate} from '../tools/tools'
+import {generationSVG, Base64, ChartTranslate} from '../../tools/tools'
 Page({
   data: {
     // 是否为简体模式，不是简体模式就是繁体模式

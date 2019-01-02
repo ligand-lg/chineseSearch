@@ -1,6 +1,6 @@
 <!-- pages/strokeOrder/strokeOrder.wxml -->
 <view class="storke-order-content">
-    <swiper indicator-dots="true" class="storke-order" current-item-id="{{isSimple? 'simple':'traditional'}}" bindchange='swiperChange'>
+    <swiper class="storke-order" current-item-id="{{isSimple? 'simple':'traditional'}}" bindchange='swiperChange'>
         <swiper-item item-id='simple'>
             <image src='{{simpleSvg}}' style="height:100%; width:100%;"/>
         </swiper-item>
