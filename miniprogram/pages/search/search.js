@@ -8,6 +8,14 @@ Page({
     placehoder: '目标汉字',
     history: ['李', '刚']
   },
+  onSearch(e) {
+    const newCha = e.detail.value
+    console.log(newCha)
+    const app = getApp()
+    app.strokeOrderApi(newCha).then(ans => {
+      wx.navigateBack()
+    }).catch(cha => console.log(cha))
+  },
 
   /**
    * Lifecycle function--Called when page load

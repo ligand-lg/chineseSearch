@@ -1,66 +1,18 @@
 // pages/strokeOrder/strokeOrder.js
 
-import {generationSVG, Base64, ChartTranslate} from '../../tools/tools'
+import { Base64 } from '../../tools/tools'
 Page({
   data: {
-    // 是否为简体模式，不是简体模式就是繁体模式
+    // 是否为简体模式，不是简体模式就是繁体模式。
     isSimple: true,
-    // 是否在加载新到字
+    // 是否在加载字。
     isLoading: false,
-    // 是否显示搜索层
-    showSearch: false,
-    searchInputFocus: false,
     // 当前展示的汉字
     character: '',
     // 当前汉字的简体svg的base64编码
     simpleSvg: '',
     // 当前汉字的繁体svg的base64编码
     traditionalSvg: ''
-  },
-  
-  // 改变当前到字
-  changeCharacter(newChar) {
-    const {simple, traditional} = ChartTranslate.translate(newChar)
-    if (!(simple && traditional)) {
-      console.error(`简繁转换库中没有${newChar}`)
-    }
-    this.setData({
-      isLoading: true
-    })
-    newChar = simple || newChar
-    const collection = wx.cloud.database().collection('chineseSearch')
-    collection.where({
-      character: newChar
-    }).get().then(res => {
-      // 查找成功
-      if (res.data.length > 0) {
-        const svgCode = `data:image/svg+xml;base64,${Base64.encode(generationSVG(res.data[0]))}`
-        this.setData({
-          simpleSvg: svgCode,
-          character: newChar
-        })
-      } else {
-        console.log(`没有找到${newChar}`)
-      }
-      this.setData({
-        isLoading: false
-      })
-    })
-    if (traditional) {
-      collection.where({
-        character: traditional
-      }).get().then(res => {
-        //查重成功
-        if (res.data.length > 0) {
-          const svgCode = `data:image/svg+xml;base64,${Base64.encode(generationSVG(res.data[0]))}`
-          this.setData({
-            traditionalSvg: svgCode
-          })
-        } else {
-          console.log(`没有找到${newChar}`)
-        }
-      })
-    }
   },
   //  显示简体字
   switchToSimple() {
@@ -84,17 +36,10 @@ Page({
       return event.detail.currentItemId === 'simple' ? this.switchToSimple() : this.switchToTraditional()
     }
   },
-  search () {
+  search() {
     wx.navigateTo({
       url: '/pages/search/search'
     })
-  },
-  // 开始搜索
-  startSearch(e) {
-    this.setData({
-      showSearch: false
-    })
-    this.changeCharacter(e.detail.value)
   },
   /**
    * Lifecycle function--Called when page load
@@ -106,13 +51,22 @@ Page({
    * Lifecycle function--Called when page is initially rendered
    */
   onReady: function () {
-    this.changeCharacter('山')
   },
 
   /**
    * Lifecycle function--Called when page show
    */
   onShow: function () {
+    // 从gloablData中同步过来
+    const app = getApp()
+    app.getGlobalStrokeOrder().then(resp => {
+      console.log(resp)
+      this.setData({
+        character: resp.simple.chart,
+        simpleSvg: `data:image/svg+xml;base64,${Base64.encode(resp.simple.svgCode)}`,
+        traditionalSvg: `data:image/svg+xml;base64,${Base64.encode(resp.traditional.svgCode)}`
+      })
+    })
   },
 
   /**
