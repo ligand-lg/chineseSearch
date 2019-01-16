@@ -1,8 +1,8 @@
 <!-- pages/strokeOrder/strokeOrder.wxml -->
-<view class="storke-order-content">
+<view class="main">
     <swiper class="storke-order" current-item-id="{{isSimple? 'simple':'traditional'}}" bindchange='swiperChange'>
         <swiper-item item-id='simple'>
-            <image src='{{simpleSvg}}' style="height:100%; width:100%;"/>
+            <image src='{{simpleSvg}}' style="height:100%; width:100%;" />
         </swiper-item>
         <swiper-item item-id='traditional'>
             <image src='{{traditionalSvg}}' style="height: 100%;width:100%;" />
@@ -11,21 +11,26 @@
 </view>
 <!-- 繁、简体切换区。练习 button -->
 <view class="middle">
-    <button size="mini" class="{{isSimple?'selected-btn':'unselected-btn' }} simple-chinese-btn" hover-class="selected-btn-hover" bindtap="switchToSimple">
+    <button size="mini" class="{{isSimple?'sel-btn':'unsel-btn' }} left-btn"  bindtap="switchToSimple">
         简
     </button>
-    <button size="mini" class="{{isSimple?'unselected-btn':'selected-btn' }} traditional-chinese-btn" hover-class="unselected-btn-hover" bindtap="switchToTraditional">
+    <button size="mini" class="{{isSimple?'unsel-btn':'sel-btn' }} right-btn"  bindtap="switchToTraditional">
         繁
     </button>
-    <button size="mini" type="primary" class="practice-btn">练习</button>
 </view>
-<!-- 当前输入的字、随机的字。搜索按钮 -->
+<!-- 当前输入的字 & 搜索按钮 -->
 <view class="bottom">
-    <view class="current-c" bindtap="search">
-        <text>{{character}}</text>
+    <!-- 当前字 -->
+    <view class="bottom-item" hover-class="bottom-item-hover">
+        <image hidden="{{!isLoading}}" class="big-icon" src="data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IgogICAgIHdpZHRoPSIyNHB4IiBoZWlnaHQ9IjMwcHgiIHZpZXdCb3g9IjAgMCAyNCAzMCIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+CiAgICA8cmVjdCB4PSIwIiB5PSIxMyIgd2lkdGg9IjQiIGhlaWdodD0iNSIgZmlsbD0id2hpdGUiPgogICAgICA8YW5pbWF0ZSBhdHRyaWJ1dGVOYW1lPSJoZWlnaHQiIGF0dHJpYnV0ZVR5cGU9IlhNTCIKICAgICAgICB2YWx1ZXM9IjU7MjE7NSIgCiAgICAgICAgYmVnaW49IjBzIiBkdXI9IjAuNnMiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiAvPgogICAgICA8YW5pbWF0ZSBhdHRyaWJ1dGVOYW1lPSJ5IiBhdHRyaWJ1dGVUeXBlPSJYTUwiCiAgICAgICAgdmFsdWVzPSIxMzsgNTsgMTMiCiAgICAgICAgYmVnaW49IjBzIiBkdXI9IjAuNnMiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiAvPgogICAgPC9yZWN0PgogICAgPHJlY3QgeD0iMTAiIHk9IjEzIiB3aWR0aD0iNCIgaGVpZ2h0PSI1IiBmaWxsPSJ3aGl0ZSI+CiAgICAgIDxhbmltYXRlIGF0dHJpYnV0ZU5hbWU9ImhlaWdodCIgYXR0cmlidXRlVHlwZT0iWE1MIgogICAgICAgIHZhbHVlcz0iNTsyMTs1IiAKICAgICAgICBiZWdpbj0iMC4xNXMiIGR1cj0iMC42cyIgcmVwZWF0Q291bnQ9ImluZGVmaW5pdGUiIC8+CiAgICAgIDxhbmltYXRlIGF0dHJpYnV0ZU5hbWU9InkiIGF0dHJpYnV0ZVR5cGU9IlhNTCIKICAgICAgICB2YWx1ZXM9IjEzOyA1OyAxMyIKICAgICAgICBiZWdpbj0iMC4xNXMiIGR1cj0iMC42cyIgcmVwZWF0Q291bnQ9ImluZGVmaW5pdGUiIC8+CiAgICA8L3JlY3Q+CiAgICA8cmVjdCB4PSIyMCIgeT0iMTMiIHdpZHRoPSI0IiBoZWlnaHQ9IjUiIGZpbGw9IndoaXRlIj4KICAgICAgPGFuaW1hdGUgYXR0cmlidXRlTmFtZT0iaGVpZ2h0IiBhdHRyaWJ1dGVUeXBlPSJYTUwiCiAgICAgICAgdmFsdWVzPSI1OzIxOzUiIAogICAgICAgIGJlZ2luPSIwLjNzIiBkdXI9IjAuNnMiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiAvPgogICAgICA8YW5pbWF0ZSBhdHRyaWJ1dGVOYW1lPSJ5IiBhdHRyaWJ1dGVUeXBlPSJYTUwiCiAgICAgICAgdmFsdWVzPSIxMzsgNTsgMTMiCiAgICAgICAgYmVnaW49IjAuM3MiIGR1cj0iMC42cyIgcmVwZWF0Q291bnQ9ImluZGVmaW5pdGUiIC8+CiAgICA8L3JlY3Q+CiAgPC9zdmc+"/>
+        <text hidden="{{isLoading}}" class="current-character">{{character}}</text>
     </view>
-</view>
-<!-- 搜索层 -->
-<view class="search-layer" hidden="{{!showSearch}}">
-    <input class="search-input" maxlength='1' bindconfirm='startSearch' bindblur='cancelSearch' focus="{{searchInputFocus}}"/>
+    <!-- 搜索 -->
+    <view class="bottom-item" bindtap='search' hover-class="bottom-item-hover">
+        <image class="big-icon" src='data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAyNCAxMDI0IiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgICA8cGF0aCBkPSJNOTA5LjYgODU0LjVMNjQ5LjkgNTk0LjhDNjkwLjIgNTQyLjcgNzEyIDQ3OSA3MTIgNDEyYzAtODAuMi0zMS4zLTE1NS40LTg3LjktMjEyLjEtNTYuNi01Ni43LTEzMi04Ny45LTIxMi4xLTg3LjlzLTE1NS41IDMxLjMtMjEyLjEgODcuOUMxNDMuMiAyNTYuNSAxMTIgMzMxLjggMTEyIDQxMmMwIDgwLjEgMzEuMyAxNTUuNSA4Ny45IDIxMi4xQzI1Ni41IDY4MC44IDMzMS44IDcxMiA0MTIgNzEyYzY3IDAgMTMwLjYtMjEuOCAxODIuNy02MmwyNTkuNyAyNTkuNmMzLjIgMy4yIDguNCAzLjIgMTEuNiAwbDQzLjYtNDMuNWMzLjItMy4yIDMuMi04LjQgMC0xMS42ek01NzAuNCA1NzAuNEM1MjggNjEyLjcgNDcxLjggNjM2IDQxMiA2MzZzLTExNi0yMy4zLTE1OC40LTY1LjZDMjExLjMgNTI4IDE4OCA0NzEuOCAxODggNDEyczIzLjMtMTE2LjEgNjUuNi0xNTguNEMyOTYgMjExLjMgMzUyLjIgMTg4IDQxMiAxODhzMTE2LjEgMjMuMiAxNTguNCA2NS42UzYzNiAzNTIuMiA2MzYgNDEycy0yMy4zIDExNi4xLTY1LjYgMTU4LjR6IiBmaWxsPSd3aGl0ZSc+CiAgICA8L3BhdGg+Cjwvc3ZnPg=='/>
+    </view>
+    <!-- 写 -->
+    <view class="bottom-item" hover-class="bottom-item-hover">
+        <image class="big-icon" src='data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAyNCAxMDI0IiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPHBhdGggZD0iTTkwNCA1MTJoLTU2Yy00LjQgMC04IDMuNi04IDh2MzIwSDE4NFYxODRoMzIwYzQuNCAwIDgtMy42IDgtOHYtNTZjMC00LjQtMy42LTgtOC04SDE0NGMtMTcuNyAwLTMyIDE0LjMtMzIgMzJ2NzM2YzAgMTcuNyAxNC4zIDMyIDMyIDMyaDczNmMxNy43IDAgMzItMTQuMyAzMi0zMlY1MjBjMC00LjQtMy42LTgtOC04eiIgZmlsbD0nd2hpdGUnPjwvcGF0aD4KICA8cGF0aCBkPSJNMzU1LjkgNTM0LjlMMzU0IDY1My44Yy0wLjEgOC45IDcuMSAxNi4yIDE2IDE2LjJoMC40bDExOC0yLjljMi0wLjEgNC0wLjkgNS40LTIuM2w0MTUuOS00MTVjMy4xLTMuMSAzLjEtOC4yIDAtMTEuM0w3ODUuNCAxMTQuM2MtMS42LTEuNi0zLjYtMi4zLTUuNy0yLjNzLTQuMSAwLjgtNS43IDIuM2wtNDE1LjggNDE1Yy0xLjQgMS41LTIuMyAzLjUtMi4zIDUuNnogbTYzLjUgMjMuNkw3NzkuNyAxOTlsNDUuMiA0NS4xLTM2MC41IDM1OS43LTQ1LjcgMS4xIDAuNy00Ni40eiIgZmlsbD0nd2hpdGUnPjwvcGF0aD4KPC9zdmc+'/>
+    </view>
 </view>

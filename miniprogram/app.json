@@ -1,11 +1,13 @@
 {
   "pages": [
-    "pages/strokeOrder/strokeOrder"
+    "pages/strokeOrder/strokeOrder",
+    "pages/search/search"
   ],
   "window": {
-    "backgroundColor": "#409EFF",
+    "enablePullDownRefresh": true,
+    "backgroundColor": "#e23e3b",
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#303030",
+    "navigationBarBackgroundColor": "#e23e3b",
     "navigationBarTitleText": "汉字查",
     "navigationBarTextStyle": "white"
   }

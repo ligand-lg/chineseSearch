@@ -1,10 +1,14 @@
 /* pages/strokeOrder/strokeOrder.wxss */
 
+page {
+    display: flex;
+    flex-flow: column;
+}
 /* 汉字笔顺展示区 */
-.storke-order-content {
+.main {
     /* 正方形展示区 */
     height: 750rpx;
-    border: 1rpx solid red;
+    border: 1px solid var(--theme-color);
 }
 .storke-order {
     height: 100%;
@@ -13,73 +17,62 @@
 .middle {
     padding-top: 10rpx;
     text-align: center;
-    position: relative;
 }
-.simple-chinese-btn {
+.left-btn {
     border-radius: 30px 0 0 30px;
 }
-.simple-chinese-btn::after {
-    border: none;
-}
-
-.traditional-chinese-btn {
+.right-btn {
     border-radius: 0 30px 30px 0;
 }
-.traditional-chinese-btn::after {
-    border: none;
-}
-.selected-btn {
-    border: 1px solid #409EFF;
-    background-color: #409EFF;
+.sel-btn {
+    border: 1px solid var(--theme-color);
+    background-color: var(--theme-color);
     color: white;
 }
-.selected-btn-hover {
-    background-color: #3a8ee6;
-}
-.unselected-btn {
-    border: 1px solid #409EFF;
+.unsel-btn {
+    border: 1px solid var(--theme-color);
     background-color: #f8f8f8;
-    color: #409EFF;
-}
-
-.unselected-btn-hover {
-    background-color: #dedede;
-}
-.practice-btn {
-    position: fixed;
-    right: 3rpx;
+    color: var(--theme-color);
 }
 
 /* 底部 */
 .bottom {
+    /* 保证从当前位置到底部 */
+    flex: 1;
     width: 100%;
-    position: fixed;
-    bottom: 0;
+    height: 100%;
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+    justify-content: space-around;
 }
-.current-c {
-    text-align: center;
-    line-height: 80px;
+.bottom-item {
     width: 80px;
     height: 80px;
-    position: fixed;
-    bottom: 10px;
-    right: 10px;
+    background-color: var(--theme-color);
+    border-radius: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+
+@keyframes button-hover {
+    from {}
+    50% {border-radius: 35px;}
+    to {border-radius: 5px;}
+}
+/* 下面三个大按钮按下效果 */
+.bottom-item-hover {
+    animation: button-hover 0.2s linear;
+}
+.big-icon {
+    width: 50px;
+    height: 50px;
+}
+
+.current-character {
     font-size: 50px;
-    border: 1px solid red;
-}
-/* 搜索层 */
-.search-layer {
-    position: fixed;
-    top:0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background-color: rgba(200, 200, 200, 0.9)
-}
-.search-input {
-    color: black;
-    margin: 10px 4px 0;
-    background-color: white;
-    padding: 5px 0 5px 10px;
-    border-radius: 10px;
+    color: white;
+    font-family: 'STKaiti','华文楷体','serif'
 }

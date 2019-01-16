@@ -5,6 +5,8 @@ Page({
   data: {
     // 是否为简体模式，不是简体模式就是繁体模式
     isSimple: true,
+    // 是否在加载新到字
+    isLoading: false,
     // 是否显示搜索层
     showSearch: false,
     searchInputFocus: false,
@@ -22,6 +24,9 @@ Page({
     if (!(simple && traditional)) {
       console.error(`简繁转换库中没有${newChar}`)
     }
+    this.setData({
+      isLoading: true
+    })
     newChar = simple || newChar
     const collection = wx.cloud.database().collection('chineseSearch')
     collection.where({
@@ -37,6 +42,9 @@ Page({
       } else {
         console.log(`没有找到${newChar}`)
       }
+      this.setData({
+        isLoading: false
+      })
     })
     if (traditional) {
       collection.where({
@@ -76,11 +84,9 @@ Page({
       return event.detail.currentItemId === 'simple' ? this.switchToSimple() : this.switchToTraditional()
     }
   },
-  // 搜索按钮点击回调
-  search() {
-    this.setData({
-      showSearch: true,
-      searchInputFocus: true
+  search () {
+    wx.navigateTo({
+      url: '/pages/search/search'
     })
   },
   // 开始搜索
@@ -90,13 +96,6 @@ Page({
     })
     this.changeCharacter(e.detail.value)
   },
-  // 取消搜索
-  cancelSearch() {
-    this.setData({
-      showSearch: false
-    })
-  },
-
   /**
    * Lifecycle function--Called when page load
    */
@@ -107,7 +106,7 @@ Page({
    * Lifecycle function--Called when page is initially rendered
    */
   onReady: function () {
-    this.changeCharacter('刚')
+    this.changeCharacter('山')
   },
 
   /**

@@ -1,0 +1,40 @@
+/* pages/search/search.wxss */
+.input-container {
+    background-color: var(--theme-color);
+    padding: 0 22rpx 30rpx;
+}
+.search-input {
+    color: black;
+    background-color: white;
+    padding: 6px 10px 6px 20px;
+    line-break: 45px;
+    border-radius: 16px;
+    font-size: 15px;
+}
+.history {
+    margin-top: 10px;
+    background-color: white;
+    padding-left: 10px;
+}
+.history-title {
+    font-size: 12px;
+    color: gray;
+    height: 35px;
+    line-height: 35px;
+    font-weight: lighter;
+}
+.history-item {
+    background-color: white;
+    border-top: 1px solid #ededed;
+    height: 40px;
+    line-height: 40px;
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+}
+
+.icon {
+    margin-right: 8px;
+    height: 24px;
+    width: 24px;
+}

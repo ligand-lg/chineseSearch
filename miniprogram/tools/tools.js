@@ -70,7 +70,7 @@ function generationSVG({medians, strokes}) {
         <clipPath id="clip-${i}">
             <path d="${strokes[i]}"></path>
         </clipPath>
-        <path clip-path="url(#clip-${i})" d="${medianPath}" fill="none" id="animation-${i}" stroke-dasharray="${pathLens[i]}" stroke-linecap="round" stroke-width='128' stroke='black'></path>
+        <path clip-path="url(#clip-${i})" d="${medianPath}" fill="none" id="animation-${i}" stroke-dasharray="${pathLens[i]}" stroke-linecap="round" stroke-width='128' stroke='#e23e3b'></path>
         `)
     }
     svgCode.push(`\t</g>\n</svg>`)
