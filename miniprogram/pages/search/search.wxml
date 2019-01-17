@@ -1,6 +1,6 @@
 <!--pages/search/search.wxml-->
 <view class="input-container">
-    <input class="search-input" maxlength='1' placeholder='{{placehoder}}' cursor-spacing='20' confirm-type='search' bindblur='onSearch'/>
+    <input class="search-input {{statusMapCssClass[status]}}" maxlength='1' placeholder='{{placehoder}}' cursor-spacing='20' confirm-type='search' bindblur='onSearch' bindfocus='searchFocus'/>
 </view>
 <view class="history">
     <view class='history-title'>

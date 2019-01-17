@@ -6,17 +6,36 @@ Page({
    */
   data: {
     placehoder: '目标汉字',
-    history: ['李', '刚']
+    // 0 - normal , 1 - searching, 2 - succeed, 3 - error
+    status: 0,
+    history: ['李', '刚'],
+    statusMapCssClass: ['.search-input-search', '.search-input-loading', '.search-input-succeed', '.search-input-error']
   },
   onSearch(e) {
     const newCha = e.detail.value
-    console.log(newCha)
-    const app = getApp()
-    app.strokeOrderApi(newCha).then(ans => {
-      wx.navigateBack()
-    }).catch(cha => console.log(cha))
+    if (newCha) {
+      this.setData({
+        status: 1
+      })
+      const app = getApp()
+      app.strokeOrderApi(newCha).then(ans => {
+        this.setData({
+          status: 2
+        })
+        setTimeout(wx.navigateBack, 350)
+      }).catch(cha => {
+        console.error(cha)
+        this.setData({
+          status: 3
+        })
+      })
+    }
   },
-
+  searchFocus() {
+    this.setData({
+      status: 0
+    })
+  },
   /**
    * Lifecycle function--Called when page load
    */
