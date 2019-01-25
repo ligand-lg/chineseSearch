@@ -1,24 +1,23 @@
 // pages/strokeOrder/strokeOrder.js
 
-import { Base64 } from '../../tools/tools'
+import Base64 from '../../tools/base64'
 Page({
   data: {
     // 是否为简体模式，不是简体模式就是繁体模式。
     isSimple: true,
-    // 是否在加载字。
-    isLoading: false,
     // 当前展示的汉字
     character: '',
     // 当前汉字的简体svg的base64编码
     simpleSvg: '',
     // 当前汉字的繁体svg的base64编码
-    traditionalSvg: ''
+    traditionalSvg: '',
   },
   //  显示简体字
   switchToSimple() {
     if (!this.data.isSimple) {
-      this.setData({
-        isSimple: true,
+      // 实在找不到重新播放svg动画的方法，只能refresh整个页面。
+      wx.redirectTo({
+        url: '/pages/strokeOrder/strokeOrder'
       })
     }
   },
@@ -28,12 +27,6 @@ Page({
       this.setData({
         isSimple: false
       })
-    }
-  },
-  // 手动滑动滑块回调
-  swiperChange(event) {
-    if (event.detail.source === 'touch') {
-      return event.detail.currentItemId === 'simple' ? this.switchToSimple() : this.switchToTraditional()
     }
   },
   search() {
@@ -57,14 +50,14 @@ Page({
    * Lifecycle function--Called when page show
    */
   onShow: function () {
+    const _process = item => `data:image/svg+xml;base64,${Base64.encode(item)}`
     // 从gloablData中同步过来
     const app = getApp()
     app.getGlobalStrokeOrder().then(resp => {
-      console.log(resp)
       this.setData({
         character: resp.simple.chart,
-        simpleSvg: `data:image/svg+xml;base64,${Base64.encode(resp.simple.svgCode)}`,
-        traditionalSvg: `data:image/svg+xml;base64,${Base64.encode(resp.traditional.svgCode)}`
+        simpleSvg: resp.simple.svgBase64Code,
+        traditionalSvg: resp.traditional.svgBase64Code
       })
     })
   },

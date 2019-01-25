@@ -1,16 +1,18 @@
 //app.js
-import { ChartTranslate, generationSVG } from './tools/tools'
+import ChartTranslate from './tools/chartTranslate'
+import generationSVG from './tools/generationSvg'
+import Base64 from './tools/base64'
 App({
   globalData: {
     isLoading: false,
     thePromise: null,
     simple: {
       chart: '',
-      svgCode: ''
+      svgCodes: ''
     },
     traditional: {
       chart: '',
-      svgCode: ''
+      svgCodes: ''
     }
   },
   onLaunch: function () {
@@ -21,7 +23,7 @@ App({
         traceUser: true,
       })
     }
-    this.strokeOrderApi('刚').then(ans => console.log(this.globalData))
+    this.strokeOrderApi('刚')
   },
   strokeOrderApi(character) {
     const { simple, traditional } = ChartTranslate.translate(character)
@@ -29,7 +31,7 @@ App({
     const ans = {
       simple: '',
       traditional: '',
-      // 同步两次请求。
+      // 同步两次请求, 表示完成个数，为2表示简体和繁体都返回了。
       status: 0
     }
     this.globalData.thePromise = new Promise((resolve, reject) => {
@@ -40,7 +42,7 @@ App({
         if (res.data.length > 0) {
           ans.simple = {
             chart: simple,
-            svgCode: generationSVG(res.data[0])
+            svgBase64Code: `data:image/svg+xml;base64,${Base64.encode(generationSVG(res.data[0], { withAnimation: true }))}`
           }
           ans.status += 1
           if (ans.status === 2) {
@@ -60,7 +62,7 @@ App({
         if (res.data.length > 0) {
           ans.traditional = {
             chart: traditional,
-            svgCode: generationSVG(res.data[0])
+            svgBase64Code: `data:image/svg+xml;base64,${Base64.encode(generationSVG(res.data[0], { withAnimation: true }))}`
           }
           ans.status += 1
           if (ans.status === 2) {

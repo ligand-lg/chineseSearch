@@ -53,6 +53,10 @@
     flex-flow: row;
     align-items: center;
 }
+.history-hover {
+    background-color: var(--theme-color);
+    border-radius: 5px;
+}
 
 .icon {
     margin-right: 8px;
