@@ -10,5 +10,6 @@
     "navigationBarBackgroundColor": "#e23e3b",
     "navigationBarTitleText": "汉字查",
     "navigationBarTextStyle": "white"
-  }
+  },
+  "sitemapLocation": "sitemap.json"
 }
