@@ -94,7 +94,9 @@ function decode_character(code) {
  */
 function encode_control(ctrl_symbol) {
   if (CTRLS.encode[ctrl_symbol] === undefined) {
-    throw `control ${ctrl} not define`
+    const errMsg = `control ${ctrl} not define`
+    console.log(errMsg)
+    throw errMsg
   }
   return CTRLS.encode[ctrl_symbol]
 }
@@ -140,7 +142,9 @@ function decode_follow(code) {
 function encode_num(num) {
   num += NUM.base
   if (num > NUM.max || num < NUM.min) {
-    throw `num: ${num} must below ${NUM.max} and up ${NUM.min}`
+    const errMsg = `num: ${num} must below ${NUM.max} and up ${NUM.min}`
+    console.log(errMsg)
+    throw errMsg
   }
   return num
 }
@@ -167,7 +171,7 @@ function encode({ character, strokes, medians }) {
 
   // character 固定大小一个单位
   encodeSize += 1
-  // storks
+  // strokes
   for (const line of strokes) {
     // 无论是操作符还是数字都是一个单位
     encodeSize += line.split(' ').length
@@ -222,7 +226,9 @@ function encode({ character, strokes, medians }) {
   bufView[i - 1] = encode_control(CONTROLS.end)
   // 校验使用的长度是否与第一步统计长度一致
   if (i != encodeSize) {
-    throw `different value between use_size: ${i} and real size ${encodeSize} `
+    const errMsg = `different value between use_size: ${i} and real size ${encodeSize}`
+    console.log(errMsg)
+    throw errMsg
   }
   return bufView
 }
@@ -236,16 +242,20 @@ function encode({ character, strokes, medians }) {
 function decode(uint16_buf, character) {
   /* 1. 首尾校验。二进制数据以 characterCode 开头，以 CONTORLS.end 结尾 */
   if (decode_character(uint16_buf[0]) !== character) {
-    throw `解码校验失败: buf 应该以字符：'${character}' 开头`
+    const errMsg = `解码校验失败: buf 应该以字符：'${character}' 开头`
+    console.log(errMsg)
+    throw errMsg
   }
   if (decode_control(uint16_buf[uint16_buf.length - 1]) !== CONTROLS.end) {
-    throw `解码校验失败：buf 应该为 '${CTRLS.decode[CONTROLS.end]}' 结尾`
+    const errMsg = `解码校验失败：buf 应该为 '${CTRLS.decode[CONTROLS.end]}' 结尾`
+    console.log(errMsg)
+    throw errMsg
   }
 
   /* 2. 开始解码。三步：1.解码character 2.解码strokes 3.解码medians */
   const res = {
     character: '',
-    storks: [],
+    strokes: [],
     medians: []
   }
   let i = 0
@@ -267,7 +277,7 @@ function decode(uint16_buf, character) {
         line.push(String(decode_num(uint16_buf[i++])))
       }
     }
-    res.storks.push(line.join(' '))
+    res.strokes.push(line.join(' '))
     // 更新到下一个op，注意不改变 i
     ctrl = decode_control(uint16_buf[i])
   }
@@ -293,7 +303,15 @@ function decode(uint16_buf, character) {
 }
 
 // node export 
-exports.encode_character = encode_character;
-exports.decode_character = decode_character;
+exports.encode_character = encode_character
+exports.decode_character = decode_character
 exports.encode = encode
 exports.decode = decode
+
+// es6 export 
+// export default {
+//   encode_character,
+//   decode_character,
+//   encode,
+//   decode
+// }

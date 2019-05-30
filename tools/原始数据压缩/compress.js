@@ -7,19 +7,25 @@
 const fs = require('fs')
 const path = require('path')
 const coder = require('./coder')
+const selectedData = require('./selected')
 
 const max = (a, b) => a > b ? a : b
 const min = (a, b) => a > b ? b : a
 // 类似 C 的整除
 const div = (a, b) => Math.floor(a / b)
-// buffer to ArrayBuffer。文件读写都是以 NodeJS 中的 buffer 为基础。而我的操作是以 ES6 中的ArrayBuffer 为基础。
-const bufferToArrayBuffer = (buf, offset, length) => {
-  let ab = new ArrayBuffer(length)
-  const view = new Uint8Array(ab)
-  for (let i = 0; i < length; ++i) {
-    view[i] = buf[offset + i]
+// Buffer/ArrayBuffer to ArrayBuffer。NodeJS读文件读返回Buffer，而微信小程序返回 ArrayBuffer，这里做兼容处理。
+const toArrayBuffer = (buf, offset, length) => {
+  if (buf instanceof ArrayBuffer) {
+    return buf.slice(offset, offset + length)
+  } else if (buf instanceof Buffer) {
+    let ab = new ArrayBuffer(length)
+    const view = new Uint8Array(ab)
+    for (let i = 0; i < length; ++i) {
+      view[i] = buf[offset + i]
+    }
+    return ab
   }
-  return ab
+  throw '不支持的类型buf'
 }
 
 /**
@@ -94,13 +100,12 @@ function rawAnalysis() {
   console.log(`maxNum: ${max_num}`)
   console.log(`minNum: ${min_num}`)
 }
-
+// --------------------------- 文件压缩 ------------------------------
 /**
  * 文件压缩。1. 对所有数据进行 encode 编码。2.进行文件分块，方便查找时不至于加载整个文件，而是包含目标的块，从而减少时间和空间开销。3. index.json 索引文件。每条索引由四部分组成：字符编码、位于哪个文件块、起始位置偏移、记录长度。
  * @param {*} chunkNum 文件分块个数
  */
-function zip(chunkNum = 16) {
-  const rawDataArray = readRawData()
+function zip(rawDataArray, chunkNum = 16) {
   // 1. 计算每个数据块中数据条数
   const chunkCaps = []
   // 首先平均下
@@ -142,8 +147,22 @@ function zip(chunkNum = 16) {
   fs.writeFile(path.join(__dirname, './index.json'), index_str, err => { if (err) { console.log(err) } })
 }
 
-const INDEXFILENAME = 'index.json'
+/**
+ * 选择 selected.js 中的文件进行压缩。
+ */
+function selected_zip() {
+  let selectedDataArray = []
+  for (const line of readRawData()) {
+    if (selectedData.selected.search(line.character) > 0) {
+      selectedDataArray.push(line)
+    }
+  }
+  zip(selectedDataArray, 1)
+}
 
+// --------------------------- 字符查找 ------------------------------
+
+const INDEXFILENAME = 'index.json'
 /**
  * 给定一个汉字，返回其索引信息，没有找到返回 null。注意 offset 和 length 都是以 16bit(2 byte) 为单位。
  * @param {*} character 目标汉字
@@ -182,7 +201,7 @@ function findIndex(character) {
 function readEncodeData({ chunkId, offset, length }) {
   const buf = fs.readFileSync(path.join(__dirname, `${chunkId}.bin`))
   // 注意基本单位
-  const arraybuf = bufferToArrayBuffer(buf, offset * 2, length * 2)
+  const arraybuf = toArrayBuffer(buf, offset * 2, length * 2)
   return new Uint16Array(arraybuf)
 }
 
@@ -195,10 +214,15 @@ function find(character) {
   if (index === null) {
     return null
   }
-  return coder.decode(readEncodeData(index), character)
+  const encodeData = readEncodeData(index)
+  const data = coder.decode(encodeData, character)
+  return data
 }
 
 
-console.log(JSON.stringify(find('符')))
-// zip()
+// --------------------------- Runner ------------------------------
+// selected_zip()
+
+console.log(JSON.stringify(find('刚')))
+// zip(readRawData())
 // rawAnalysis()
