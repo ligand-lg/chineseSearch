@@ -14,5 +14,5 @@ $RECYCLE.BIN/
 node_modules/
 
 # Project
-tools/原始数据压缩/*.bin
-tools/原始数据压缩/index.json
+tools/原始数据压缩/compressData
+
