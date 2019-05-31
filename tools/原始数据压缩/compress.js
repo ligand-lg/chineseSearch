@@ -5,15 +5,18 @@
  * 
  */
 
+
+const DATADIRNAME = 'compressData'
+
 //  ---------------- NodeJS -------------
 const fs = require('fs')
-const _dirname = __dirname
 const Coder = require('./coder')
 const selectedData = require('./selected')
+const ROOTDIRPATH = __dirname
 
 // ---------------- MiniPorgrame -------------
 // const fs = wx.getFileSystemManager()
-// const _dirname = wx.env.USER_DATA_PATH
+// const ROOTDIRPATH = wx.env.USER_DATA_PATH
 // import Coder from './coder'
 
 
@@ -38,9 +41,9 @@ const toArrayBuffer = (buf, offset, length) => {
 }
 
 // 文件名 -> 文件绝对路径。NodeJS 和 微信小程序兼容处理。
-const _myPrefix = 'compressData'
-const absPath = filename => {
-  return `${_dirname}/${_myPrefix}/${filename}`
+const DATADIRPATH = `${ROOTDIRPATH}/${DATADIRNAME}`
+const filePath = filename => {
+  return `${DATADIRPATH}/${filename}`
 }
 
 // 使用单例模式来实现 索引信息 内存常驻，优化查询时间。
@@ -48,7 +51,7 @@ let _index = null
 const getIndex = () => {
   if (_index === null) {
     // 初始化索引，注意：这里没有进行文件存在检查
-    _index = JSON.parse(fs.readFileSync(absPath('index.json'), 'utf8')).index
+    _index = JSON.parse(fs.readFileSync(filePath('index.json'), 'utf8')).index
   }
   return _index
 }
@@ -56,6 +59,7 @@ const getIndex = () => {
 // --------------------------- 文件压缩 ------------------------------
 /**
  * 文件压缩。1. 对所有数据进行 encode 编码。2.进行文件分块，方便查找时不至于加载整个文件，而是包含目标的块，从而减少时间和空间开销。3. index.json 索引文件。每条索引由四部分组成：字符编码、位于哪个文件块、起始位置偏移、记录长度。
+ * @param {*} rawDataArray 带压缩的数据，格式为json数组
  * @param {*} chunkNum 文件分块个数
  */
 function zip(rawDataArray, chunkNum = 16) {
@@ -79,7 +83,7 @@ function zip(rawDataArray, chunkNum = 16) {
     let chunkId = i + 1
     let filename = `${chunkId}.bin`
     let offset = 0
-    let fd = fs.openSync(absPath(filename), 'w')
+    let fd = fs.openSync(filePath(filename), 'w')
     for (let j = 0; j < chunkCaps[i]; ++j) {
       // 将 Uint16 转为 Uint8 来写入文件
       const characterCode = Coder.encode_character(rawDataArray[cnt].character)
@@ -94,10 +98,29 @@ function zip(rawDataArray, chunkNum = 16) {
     }
     fs.close(fd, err => { if (err) { console.log(err) } })
   }
-  // 3. 写入索引
+  // 3. 写入索引。
+  /**
+   * 索引格式
+   * {
+   *   describe：索引格式文字描述，
+   *   index: [[characterCode, chunkId, offset, length]]，
+   *   meta: {
+   *     chunkNum: 分块数, 
+   *     count: 数据条数
+   *   }
+   * }
+   * 
+   */
   const describe = ['character', 'chunkId', 'offset', 'length']
-  const index_str = JSON.stringify({ describe, index })
-  fs.writeFile(absPath('./index.json'), index_str, err => { if (err) { console.log(err) } })
+  const index_str = JSON.stringify({
+    describe,
+    meta: {
+      chunkNum,
+      count: cnt
+    },
+    index
+  })
+  fs.writeFile(filePath('./index.json'), index_str, err => { if (err) { console.log(err) } })
 }
 
 /**
@@ -150,10 +173,16 @@ function findIndex(character) {
  * @param {*} param0 索引信息
  */
 function readEncodeData({ chunkId, offset, length }) {
-  const buf = fs.readFileSync(absPath(`${chunkId}.bin`))
-  // 注意基本单位
-  const arraybuf = toArrayBuffer(buf, offset * 2, length * 2)
-  return new Uint16Array(arraybuf)
+  return new Promise((resolve, reject) => {
+    try {
+      const buf = fs.readFileSync(filePath(`${chunkId}.bin`))
+      // 注意基本单位
+      const arraybuf = toArrayBuffer(buf, offset * 2, length * 2)
+      resolve(new Uint16Array(arraybuf))
+    } catch (error) {
+      reject(error)
+    }
+  })
 }
 
 /**
@@ -161,24 +190,36 @@ function readEncodeData({ chunkId, offset, length }) {
  * @param {*} character 
  */
 function findLocal(character) {
-  // 1. 找索引信息
-  const index = findIndex(character)
-  // 没有找到索引，表示数据库中不存在该字
-  if (index === null) {
-    return null
-  }
-  // 2. 通过索引找编码数据
-  const encodeData = readEncodeData(index)
-  // 3. 解码数据
-  const data = Coder.decode(encodeData, character)
-  return data
+  return new Promise((resolve, reject) => {
+    // 1. 找索引信息
+    const index = findIndex(character)
+    // 没有找到索引，表示数据库中不存在该字
+    if (index === null) {
+      reject(`这么生僻的字(${character})，还是联网查好!(本地查无此字)`)
+    }
+    // 2. 通过索引找编码数据
+    readEncodeData(index)
+      .then(encodeData => {
+        // 3. 解码数据
+        const data = Coder.decode(encodeData, character)
+        resolve(data)
+      })
+      .catch(err => { reject(err) })
+  })
+}
+
+function getChunkNum() {
+  const index = JSON.parse(fs.readFileSync(filePath('index.json'), 'utf8'))
+  return index.meta.chunkNum
 }
 
 // NodeJS
 exports.findLocal = findLocal
 exports.selected_zip = selected_zip
+exports.getChunkNum = getChunkNum
 
 // es6
-export {
-  findLocal
-}
+// export {
+  // findLocal,
+  // getChunkNum
+// }
