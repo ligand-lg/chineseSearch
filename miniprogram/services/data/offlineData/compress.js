@@ -1,23 +1,19 @@
 /**
- * 微信小程序本地存储上限为10MB，而所有数据原始大小为30MB+，故需要魔改压缩 + 常用字选择。
- * 压缩比例：30MB -> 16MB, 接近 50%。
- * 字数选择：
- * 
+ *  这个文件是 tools/compress.js 的子集
  */
-
 
 const DATADIRNAME = 'compressData'
 
 //  ---------------- NodeJS -------------
-const fs = require('fs')
-const Coder = require('./coder')
-const selectedData = require('./selected')
-const ROOTDIRPATH = __dirname
+// const fs = require('fs')
+// const Coder = require('./coder')
+// const selectedData = require('./selected')
+// const ROOTDIRPATH = __dirname
 
 // ---------------- MiniPorgrame -------------
-// const fs = wx.getFileSystemManager()
-// const ROOTDIRPATH = wx.env.USER_DATA_PATH
-// import Coder from './coder'
+const fs = wx.getFileSystemManager()
+const ROOTDIRPATH = wx.env.USER_DATA_PATH
+import Coder from './coder'
 
 
 // 类似 C 的整除
@@ -54,86 +50,6 @@ const getIndex = () => {
     _index = JSON.parse(fs.readFileSync(filePath('index.json'), 'utf8'))
   }
   return _index
-}
-
-// --------------------------- 文件压缩 ------------------------------
-/**
- * 文件压缩。1. 对所有数据进行 encode 编码。2.进行文件分块，方便查找时不至于加载整个文件，而是包含目标的块，从而减少时间和空间开销。3. index.json 索引文件。每条索引由四部分组成：字符编码、位于哪个文件块、起始位置偏移、记录长度。
- * @param {*} rawDataArray 带压缩的数据，格式为json数组
- * @param {*} chunkNum 文件分块个数
- */
-function zip(rawDataArray, chunkNum = 16) {
-  // 1. 计算每个数据块中数据条数
-  const chunkCaps = []
-  // 首先平均下
-  for (let i = 0; i < chunkNum; ++i) {
-    chunkCaps.push(div(rawDataArray.length, chunkNum))
-  }
-  // 在均分余数
-  for (let i = 0; i < rawDataArray.length % chunkNum; ++i) {
-    chunkCaps[i] += 1
-  }
-
-  // 索引
-  const index = []
-
-  // 2. 写入压缩文件
-  let cnt = 0
-  for (let i = 0; i < chunkNum; ++i) {
-    let chunkId = i + 1
-    let filename = `${chunkId}.bin`
-    let offset = 0
-    let fd = fs.openSync(filePath(filename), 'w')
-    for (let j = 0; j < chunkCaps[i]; ++j) {
-      // 将 Uint16 转为 Uint8 来写入文件
-      const characterCode = Coder.encode_character(rawDataArray[cnt].character)
-      const uint16 = Coder.encode(rawDataArray[cnt])
-      const buf = new Uint8Array(uint16.buffer)
-      fs.write(fd, buf, err => { if (err) { console.err(err) } })
-
-      // 更新索引
-      index.push([characterCode, chunkId, offset, uint16.length])
-      offset += uint16.length
-      cnt++
-    }
-    fs.close(fd, err => { if (err) { console.log(err) } })
-  }
-  // 3. 写入索引。
-  /**
-   * 索引格式
-   * {
-   *   describe：索引格式文字描述，
-   *   index: [[characterCode, chunkId, offset, length]]，
-   *   meta: {
-   *     chunkNum: 分块数, 
-   *     count: 数据条数
-   *   }
-   * }
-   * 
-   */
-  const describe = ['character', 'chunkId', 'offset', 'length']
-  const index_str = JSON.stringify({
-    describe,
-    meta: {
-      chunkNum,
-      count: cnt
-    },
-    index
-  })
-  fs.writeFile(filePath('./index.json'), index_str, err => { if (err) { console.log(err) } })
-}
-
-/**
- * 选择 selected.js 中的汉字进行压缩。
- */
-function selected_zip(rawDataArray, chunkNum = 1) {
-  let selectedDataArray = []
-  for (const line of rawDataArray) {
-    if (selectedData.selected.search(line.character) > 0) {
-      selectedDataArray.push(line)
-    }
-  }
-  zip(selectedDataArray, chunkNum)
 }
 
 // --------------------------- 字符查找 ------------------------------
@@ -212,12 +128,12 @@ function getChunkNum() {
 }
 
 // NodeJS
-exports.findLocal = findLocal
-exports.selected_zip = selected_zip
-exports.getChunkNum = getChunkNum
+// exports.findLocal = findLocal
+// exports.selected_zip = selected_zip
+// exports.getChunkNum = getChunkNum
 
 // es6
-// export {
-  // findLocal,
-  // getChunkNum
-// }
+export {
+  findLocal,
+  getChunkNum
+}
