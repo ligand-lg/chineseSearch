@@ -10,7 +10,7 @@
 	},
 	"appid": "wx5c2c715fb02f8982",
 	"projectname": "ChineseSearch",
-	"libVersion": "2.2.5",
+	"libVersion": "2.6.6",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
 	"condition": {

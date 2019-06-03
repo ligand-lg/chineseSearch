@@ -1,6 +1,6 @@
 // pages/strokeOrder/strokeOrder.js
 
-import Base64 from '../../tools/base64'
+import Base64 from '../../utils/base64'
 Page({
   data: {
     // 是否为简体模式，不是简体模式就是繁体模式。
@@ -11,6 +11,8 @@ Page({
     simpleSvg: '',
     // 当前汉字的繁体svg的base64编码
     traditionalSvg: '',
+    // 当前汉字是否有对应的不同写法的繁体，没有的话，只展示简体。
+    hasTraditional: false
   },
   //  显示简体字
   switchToSimple() {
@@ -55,9 +57,9 @@ Page({
     const app = getApp()
     app.getGlobalStrokeOrder().then(resp => {
       this.setData({
-        character: resp.simple.chart,
-        simpleSvg: resp.simple.svgBase64Code,
-        traditionalSvg: resp.traditional.svgBase64Code
+        character: resp.inputChar,
+        simpleSvg: _process(resp.simple.svgCodes),
+        traditionalSvg: _process(resp.traditional.svgCodes)
       })
     })
   },

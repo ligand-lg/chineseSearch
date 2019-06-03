@@ -20,7 +20,7 @@ function getAnimationDuration(pathLen) {
     return Math.sqrt(pathLen) * 0.04 + 0.3
 }
 // 基础配置
-import generationSVGDefaults from '../svgConf.js'
+import generationSVGDefaults from './svgConf'
 
 // 手动构建svg 带动画的。
 function generationSVG({ medians, strokes }, {

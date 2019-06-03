@@ -1,20 +1,22 @@
 //app.js
-import ChartTranslate from './tools/chartTranslate'
-import generationSVG from './tools/generationSvg'
-import Base64 from './tools/base64'
+import simpleToTraditional from './utils/simpleToTraditional'
+import generationSVG from './services/generationSvg/generationSvg'
 import searchData from './services/data/data'
 import { download, cleanup, hasLocalData } from './services/data/offlineData/fileManager'
 
 App({
   globalData: {
+    requestsPromise: null,
+
     isLoading: false,
-    thePromise: null,
+    inputChar: '',
+    hasTraditional: false,
     simple: {
-      chart: '',
+      char: '',
       svgCodes: ''
     },
     traditional: {
-      chart: '',
+      char: '',
       svgCodes: ''
     }
   },
@@ -33,58 +35,66 @@ App({
     this.strokeOrderApi('刚')
   },
   strokeOrderApi(character) {
-    const { simple, traditional } = ChartTranslate.translate(character)
+    const simpleChar = character
+    const traditionalChar = simpleToTraditional(simpleChar)
+    const hasTraditional = traditionalChar !== null
+
+    // 新的数据
     const ans = {
       simple: '',
       traditional: '',
-      // 同步两次请求, 表示完成个数，为2表示简体和繁体都返回了。
-      status: 0
     }
-    this.globalData.thePromise = new Promise((resolve, reject) => {
-      this.globalData.isLoading = true
-      searchData(simple)
-        .then(res => {
-          ans.simple = {
-            chart: simple,
-            svgBase64Code: `data:image/svg+xml;base64,${Base64.encode(generationSVG(res, { withAnimation: true }))}`
-          }
-          ans.status += 1
-          if (ans.status === 2) {
-            this.globalData.simple = ans.simple
-            this.globalData.traditional = ans.traditional
-            this.globalData.isLoading = false
-            resolve(ans)
-          }
-        })
-        .catch(err => {
-          this.globalData.isLoading = false
-          reject(err)
-        })
 
-      searchData(traditional)
-        .then(res => {
+    this.globalData.requestsPromise = new Promise((resolve, reject) => {
+      /* 请求成功调用  */
+      let _requestRemainder = hasTraditional ? 2 : 1
+      const requestFinish = (resp, isSimple) => {
+        const svgCodes = generationSVG(resp)
+        if (isSimple) {
+          ans.simple = {
+            char: simpleChar,
+            svgCodes
+          }
+        } else {
           ans.traditional = {
-            chart: traditional,
-            svgBase64Code: `data:image/svg+xml;base64,${Base64.encode(generationSVG(res, { withAnimation: true }))}`
+            char: traditionalChar,
+            svgCodes
           }
-          ans.status += 1
-          if (ans.status === 2) {
-            this.globalData.simple = ans.simple
-            this.globalData.traditional = ans.traditional
-            this.globalData.isLoading = false
-            resolve(ans)
-          }
-        })
-        .catch(err => {
+        }
+        // 同步处理
+        _requestRemainder -= 1
+        if (_requestRemainder <= 0) {
+          this.globalData.simple = ans.simple
+          this.globalData.traditional = ans.traditional
           this.globalData.isLoading = false
-          reject(err)
-        })
+          this.globalData.hasTraditional = hasTraditional
+          this.globalData.inputChar = character
+          resolve(this.globalData)
+        }
+      }
+      /* 请求失败处理 */
+      const requestFail = (err) => {
+        this.globalData.isLoading = false
+        reject(err)
+      }
+      /** 开始请求 */
+      this.globalData.isLoading = true
+      // 简体
+      searchData(simpleChar)
+        .then(resp => { requestFinish(resp, true) })
+        .catch(requestFail)
+      // 有繁体，在请求数据
+      if (hasTraditional) {
+        searchData(traditionalChar)
+          .then(resp => { requestFinish(resp, false) })
+          .catch(requestFail)
+      }
     })
-    return this.globalData.thePromise
+    return this.globalData.requestsPromise
   },
   getGlobalStrokeOrder() {
     if (this.globalData.isLoading) {
-      return this.globalData.thePromise
+      return this.globalData.requestsPromise
     } else {
       return Promise.resolve(this.globalData)
     }
