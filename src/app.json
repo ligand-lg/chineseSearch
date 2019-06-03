@@ -1,0 +1,16 @@
+{
+  "pages": [
+    "pages/setting",
+    "pages/strokeOrder/strokeOrder",
+    "pages/search/search"
+  ],
+  "window": {
+    "enablePullDownRefresh": false,
+    "backgroundColor": "#e23e3b",
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#e23e3b",
+    "navigationBarTitleText": "汉字查",
+    "navigationBarTextStyle": "white"
+  },
+  "sitemapLocation": "sitemap.json"
+}

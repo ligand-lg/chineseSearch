@@ -1,0 +1,13 @@
+<!--pages/search/search.wxml-->
+<view class="input-container">
+    <input class="search-input {{statusMapCssClass[status]}}" maxlength='1' placeholder='{{placehoder}}' cursor-spacing='20' confirm-type='search' bindblur='onSearch' bindfocus='searchFocus' value="{{inputValue}}"/>
+</view>
+<view class="history">
+    <view class='history-title'>
+        <text>搜索历史</text>
+    </view>
+    <view wx:for="{{history}}" class="history-item" wx:key="*this" bindtap='tapHistory' id="{{item}}" hover-class='history-hover'>
+        <image class='icon' src="data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAyNCAxMDI0IiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgICA8cGF0aCBkPSJNNTM2LjEgMjczSDQ4OGMtNC40IDAtOCAzLjYtOCA4djI3NS4zYzAgMi42IDEuMiA1IDMuMyA2LjVsMTY1LjMgMTIwLjdjMy42IDIuNiA4LjYgMS45IDExLjItMS43bDI4LjYtMzljMi43LTMuNyAxLjktOC43LTEuNy0xMS4yTDU0NC4xIDUyOC41VjI4MWMwLTQuNC0zLjYtOC04LTh6TTc1NS45IDM0OC4ybDE1Ni44IDM4LjNjNSAxLjIgOS45LTIuNiA5LjktNy43bDAuOC0xNjEuNWMwLTYuNy03LjctMTAuNS0xMi45LTYuM0w3NTIuOSAzMzQuMWMtNS4zIDQuMi0zLjUgMTIuNSAzIDE0LjF6TTkyMy42IDY0OS4zbC01Ni43LTE5LjVjLTQuMS0xLjQtOC42IDAuNy0xMC4xIDQuOC0xLjkgNS4xLTMuOSAxMC4xLTYgMTUuMS0xNy44IDQyLjEtNDMuMyA4MC03NS45IDExMi41LTMyLjUgMzIuNS03MC40IDU4LjEtMTEyLjUgNzUuOS00My42IDE4LjQtODkuOSAyNy44LTEzNy43IDI3LjgtNDcuOCAwLTk0LjEtOS4zLTEzNy43LTI3LjgtNDIuMS0xNy44LTgwLTQzLjQtMTEyLjUtNzUuOS0zMi41LTMyLjUtNTgtNzAuNC03NS45LTExMi41QzE4MC4zIDYwNi4yIDE3MSA1NTkuOCAxNzEgNTEyYzAtNDcuOCA5LjMtOTQuMiAyNy44LTEzNy44IDE3LjgtNDIuMSA0My4zLTgwIDc1LjktMTEyLjUgMzIuNS0zMi41IDcwLjQtNTguMSAxMTIuNS03NS45QzQzMC42IDE2Ny4zIDQ3NyAxNTggNTI0LjggMTU4czk0LjEgOS4zIDEzNy43IDI3LjhjNDIuMSAxNy44IDgwIDQzLjQgMTEyLjUgNzUuOSAxMC4yIDEwLjMgMTkuOCAyMSAyOC42IDMyLjNsNTkuOC00Ni44Qzc4NC43IDE0Ni42IDY2Mi4yIDgxLjkgNTI0LjYgODIgMjg1IDgyLjEgOTIuNiAyNzYuNyA5NSA1MTYuNCA5Ny40IDc1MS45IDI4OC45IDk0MiA1MjQuOCA5NDJjMTg1LjUgMCAzNDMuNS0xMTcuNiA0MDMuNy0yODIuMyAxLjUtNC4yLTAuNy04LjktNC45LTEwLjR6IiBmaWxsPScjZWRlZGVkJz4KICAgIDwvcGF0aD4KPC9zdmc+"></image>
+        <text>{{item}}</text>
+    </view>
+</view>

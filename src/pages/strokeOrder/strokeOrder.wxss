@@ -1,0 +1,97 @@
+/* pages/strokeOrder/strokeOrder.wxss */
+
+page {
+    display: flex;
+    flex-flow: column;
+}
+
+.block-fill {
+    height: 100%;
+    width: 100%;
+}
+
+
+/* ----------------笔顺动画展示区---------------- */
+.main {
+    height: 750rpx;
+    border: 1px solid var(--theme-color);
+}
+
+/* ----------------繁、简体切换区---------------- */
+.middle {
+    padding-top: 10rpx;
+    text-align: center;
+}
+.left-btn {
+    border-radius: 30px 0 0 30px;
+}
+.right-btn {
+    border-radius: 0 30px 30px 0;
+}
+/* 按钮选中状态 */
+.sel-btn {
+    border: 1px solid var(--theme-color);
+    background-color: var(--theme-color);
+    color: white;
+}
+/* 按钮没有选中状态 */
+.unsel-btn {
+    border: 1px solid var(--theme-color);
+    background-color: #f8f8f8;
+    color: var(--theme-color);
+}
+
+/* 按钮不可用状态 */
+.unavailable-btn {
+    border-width: 1px 1px 1px 0;
+    border-color: lightgray;
+    border-style: solid;
+    background-color: #f8f8f8;
+    color: lightgray;
+}
+
+
+
+
+/* ----------------搜索按钮 & 设置按钮---------------- */
+.bottom {
+    /* 保证从当前位置到底部 */
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+    justify-content: space-around;
+}
+.bottom-item {
+    width: 80px;
+    height: 80px;
+    background-color: var(--theme-color);
+    border-radius: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+
+/* 自定义动画效果 */
+@keyframes button-hover {
+    from {}
+    50% {border-radius: 35px; background-color: gray;}
+    to {border-radius: 5px; background-color: var(--theme-color)}
+}
+
+.bottom-item-hover {
+    animation: button-hover 0.2s linear;
+}
+.big-icon {
+    width: 50px;
+    height: 50px;
+}
+
+.current-character {
+    font-size: 50px;
+    color: white;
+    font-family: 'STKaiti','华文楷体','serif'
+}
