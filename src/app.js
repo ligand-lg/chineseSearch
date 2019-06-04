@@ -2,7 +2,6 @@
 import simpleToTraditional from './utils/simpleToTraditional'
 import generationSVG from './services/generationSvg/generationSvg'
 import searchData from './services/data/data'
-import { download, cleanup, hasLocalData } from './services/data/offlineData/fileManager'
 
 App({
   globalData: {

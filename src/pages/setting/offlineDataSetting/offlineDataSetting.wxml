@@ -1,0 +1,8 @@
+<!-- src/pages/setting/offlineData.wxml -->
+<view class="page">
+  <view class="info">当前状态: {{hasOfflineData?'已缓存':'未缓存'}}</view>
+  <view class="op">
+    <button hidden="{{hasOfflineData}}" type="primary" loading="{{isLoading}}" bindtap="download">下载缓存</button>
+    <button hidden="{{!hasOfflineData}}" type="warn" loading="{{isLoading}}" bindtap="cleanup">清除缓存</button>
+  </view>
+</view>
