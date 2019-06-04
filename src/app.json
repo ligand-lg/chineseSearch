@@ -1,8 +1,9 @@
 {
   "pages": [
-    "pages/setting",
     "pages/strokeOrder/strokeOrder",
-    "pages/search/search"
+    "pages/setting/setting",
+    "pages/search/search",
+    "pages/setting/offlineDataSetting/offlineDataSetting"
   ],
   "window": {
     "enablePullDownRefresh": false,

@@ -28,10 +28,6 @@ App({
         traceUser: true,
       })
     }
-    // just for test
-    if (!hasLocalData()) {
-      download()
-    }
     this.strokeOrderApi('刚')
   },
   strokeOrderApi(character) {
@@ -75,6 +71,12 @@ App({
       /* 请求失败处理 */
       const requestFail = (err) => {
         this.globalData.isLoading = false
+        wx.showModal({
+          title: '请求数据错误',
+          content: err,
+          showCancel: false
+        })
+        // resolve(this.globalData)
         reject(err)
       }
       /** 开始请求 */

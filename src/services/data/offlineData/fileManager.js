@@ -29,20 +29,26 @@ const getFileID = filename => {
 
 
 const EXISTKEY = 'exitKey'
+let __status = null
 const existTag = {
   setExistTag: () => {
+    __status = true
     wx.setStorageSync(EXISTKEY, true)
   },
   removeExistTag: () => {
+    __status = false
     wx.setStorageSync(EXISTKEY, false)
   },
   getExistTag: () => {
-    try {
-      const value = wx.getStorageSync(EXISTKEY)
-      return value
-    } catch (e) {
-      return false
+    if (__status === null) {
+      try {
+        __status = wx.getStorageSync(EXISTKEY)
+      } catch (e) {
+        wx.setStorageSync(EXISTKEY, false)
+        __status = false
+      }
     }
+    return __status
   }
 }
 

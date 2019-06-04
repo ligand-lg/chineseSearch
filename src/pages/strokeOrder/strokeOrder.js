@@ -37,7 +37,9 @@ Page({
     })
   },
   setting() {
-    console.log('setting')
+    wx.navigateTo({
+      url: '/pages/setting/setting'
+    })
   },
   // 从 app.js 中同步数据
   syncData() {

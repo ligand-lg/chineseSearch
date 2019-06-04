@@ -21,8 +21,7 @@ function searchData(character) {
   return new Promise((resolve, rejecct) => {
     wx.getNetworkType({
       success(res) {
-        const networkType = res.networkType
-        switch (networkType) {
+        switch (res.networkType) {
           case 'wifi':
           case '2g':
           case '3g':

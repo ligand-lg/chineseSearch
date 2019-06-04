@@ -1,5 +1,5 @@
 {
-	"miniprogramRoot": "miniprogram/",
+	"miniprogramRoot": "src/",
 	"cloudfunctionRoot": "cloudfunctions/",
 	"setting": {
 		"urlCheck": true,
