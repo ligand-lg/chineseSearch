@@ -1,14 +1,5 @@
 /* src/pages/setting/offlineData.wxss */
 
-
-.info {
-  background-color: white;
-  padding-left: 30rpx;
-  height: 100rpx;
-  line-height: 100rpx;
-  border-top: 1px solid #ededed;
-}
-
 .op {
   margin: 40rpx 30rpx 0 30rpx; 
 }

@@ -1,0 +1,13 @@
+<!-- src/pages/setting/animationSetting/animationSetting.wxml -->
+<view>
+  <view class="section">
+    <picker bindchange="changeSpeed" range="{{speedOpt}}" value="{{speedSelected}}">
+      <view>动画速度：{{speedOpt[speedSelected]}}</view>
+    </picker>
+  </view>
+  <view class="section">
+    <picker bindchange="changePenColor" range="{{penColorOpt}}" value="{{penColorSelected}}">
+      <view>笔画颜色：{{penColorOpt[penColorSelected]}}</view>
+    </picker>
+  </view>
+</view>

@@ -1,6 +1,6 @@
 //app.js
 import simpleToTraditional from './utils/simpleToTraditional'
-import generationSVG from './services/generationSvg/generationSvg'
+import buildSvg from './services/buildSvg/buildSvg'
 import searchData from './services/data/data'
 
 App({
@@ -44,7 +44,7 @@ App({
       /* 请求成功调用  */
       let _requestRemainder = hasTraditional ? 2 : 1
       const requestFinish = (resp, isSimple) => {
-        const svgCodes = generationSVG(resp)
+        const svgCodes = buildSvg(resp)
         if (isSimple) {
           ans.simple = {
             char: simpleChar,

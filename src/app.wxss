@@ -3,6 +3,18 @@ page {
     background-color: #ededed;
     --theme-color: #e23e3b;
 }
+
+.section {
+    background-color: white;
+    padding-left: 30rpx;
+    height: 100rpx;
+    line-height: 100rpx;
+    border-top: 1px solid #ededed;
+}
+.section-hover {
+    background-color: lightgray;
+}
+
 button::after {
     border: none;
 }

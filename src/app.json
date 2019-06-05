@@ -3,7 +3,8 @@
     "pages/strokeOrder/strokeOrder",
     "pages/setting/setting",
     "pages/search/search",
-    "pages/setting/offlineDataSetting/offlineDataSetting"
+    "pages/setting/offlineDataSetting/offlineDataSetting",
+    "pages/setting/animationSetting/animationSetting"
   ],
   "window": {
     "enablePullDownRefresh": false,

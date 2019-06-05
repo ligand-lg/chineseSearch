@@ -9,7 +9,7 @@ Page({
       {
         id: 'animation',
         name: '动画设置',
-        page: 'animation/animation'
+        page: 'animationSetting/animationSetting'
       }, {
         id: 'offlineData',
         name: '本地缓存',
