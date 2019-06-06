@@ -51,10 +51,8 @@ function setPenColor(penColor) {
   svgConf.penColor = penColor
 }
 
-// 注意这里的初始化
-init()
-
 export {
+  init,
   svgConf,
   getSpeed,
   setSpeed,

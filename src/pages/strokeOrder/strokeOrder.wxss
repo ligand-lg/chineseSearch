@@ -51,8 +51,6 @@ page {
 }
 
 
-
-
 /* ----------------搜索按钮 & 设置按钮---------------- */
 .bottom {
     /* 保证从当前位置到底部 */
@@ -75,15 +73,8 @@ page {
     justify-content: space-around;
 }
 
-/* 自定义动画效果 */
-@keyframes button-hover {
-    from {}
-    50% {border-radius: 35px; background-color: gray;}
-    to {border-radius: 5px; background-color: var(--theme-color)}
-}
-
 .bottom-item-hover {
-    animation: button-hover 0.2s linear;
+    background-color: rgb(180, 50, 50);
 }
 .big-icon {
     width: 50px;

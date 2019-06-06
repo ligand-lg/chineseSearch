@@ -1,7 +1,7 @@
 <!-- miniprogram/pages/setting.wxml -->
 <view>
   <block wx:for="{{settings}}" wx:key="id">
-    <navigator url="/pages/setting/{{item.page}}" class="setting" hover-class="setting-hover">
+    <navigator url="/pages/setting/{{item.page}}" class="section" hover-class="section-hover">
       <view class="setting-name">{{item.name}}</view>
       <view class="setting-arrow"></view>
     </navigator>

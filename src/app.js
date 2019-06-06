@@ -2,6 +2,8 @@
 import simpleToTraditional from './utils/simpleToTraditional'
 import buildSvg from './services/buildSvg/buildSvg'
 import searchData from './services/data/data'
+import { init as historyInit } from './services/history/history'
+import { init as svgConfInit } from './services/buildSvg/svgConf'
 
 App({
   globalData: {
@@ -27,6 +29,8 @@ App({
         traceUser: true,
       })
     }
+    historyInit()
+    svgConfInit()
     this.strokeOrderApi('刚')
   },
   strokeOrderApi(character) {
