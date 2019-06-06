@@ -133,6 +133,7 @@ function selected_zip(rawDataArray, chunkNum = 1) {
       selectedDataArray.push(line)
     }
   }
+  console.log(`selected char num: ${selectedDataArray.length}`)
   zip(selectedDataArray, chunkNum)
 }
 

@@ -86,8 +86,8 @@ function rawAnalysis() {
 }
 
 // --------------------------- Runner ------------------------------
-// compress.selected_zip(readRawData())
-console.log(compress.getChunkNum())
+compress.selected_zip(readRawData(), 8)
+// console.log(compress.getChunkNum())
 
 // compress.findLocal('刚')
   // .then(data => {
