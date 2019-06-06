@@ -14,10 +14,6 @@ Page({
         id: 'offlineData',
         name: '本地缓存',
         page: 'offlineDataSetting/offlineDataSetting'
-      }, {
-        id: 'about',
-        name: '关于',
-        page: 'about/about'
       }
     ]
 

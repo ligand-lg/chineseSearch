@@ -9,23 +9,50 @@ const svgConf = {
   speed: 1,
 }
 
-function getSpeed() {
- return svgConf.speed 
+const SpeedKey = 'SpeedKey'
+const PenColorKey = 'PenColorKey'
+
+function init() {
+  wx.getStorage({
+    key: SpeedKey,
+    success(res) {
+      svgConf.speed = res.data
+    }
+  })
+  wx.getStorage({
+    key: PenColorKey,
+    success(res) {
+      svgConf.penColor = res.data;
+    }
+  })
 }
 
-// TODO: 持久化
+function getSpeed() {
+  return svgConf.speed
+}
+
 function setSpeed(speed) {
+  wx.setStorage({
+    key: SpeedKey,
+    data: speed
+  })
   svgConf.speed = speed
 }
 
 function getPenColor() {
   return svgConf.penColor
-
 }
 
 function setPenColor(penColor) {
+  wx.setStorage({
+    key: PenColorKey,
+    data: penColor
+  })
   svgConf.penColor = penColor
 }
+
+// 注意这里的初始化
+init()
 
 export {
   svgConf,
