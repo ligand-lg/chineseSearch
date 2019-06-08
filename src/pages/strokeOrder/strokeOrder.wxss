@@ -15,6 +15,7 @@ page {
 .main {
     height: 750rpx;
     border: 1px solid var(--theme-color);
+    background-color: white;
 }
 
 /* ----------------繁、简体切换区---------------- */

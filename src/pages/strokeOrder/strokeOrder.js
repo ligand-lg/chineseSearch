@@ -7,19 +7,37 @@ Page({
     isSimple: true,
     // 当前展示的汉字
     character: '',
-    // 当前汉字的简体svg的base64编码
+    // 当前动画的 svg base64编码
+    svgBase64: '',
+    // 当前汉字的简体svg代码
     simpleSvg: '',
-    // 当前汉字的繁体svg的base64编码
+    // 当前汉字的繁体svg代码
     traditionalSvg: '',
     // 当前汉字是否有对应的不同写法的繁体，没有的话，只展示简体。
     hasTraditional: false
   },
-  //  显示简体字
+  // 重新开始播放当前动画
+  reStartAnimation() {
+    if (this.data.isSimple) {
+      this.setData({
+        svgBase64: this.toUniqueBase64(this.data.simpleSvg)
+      })
+    }else {
+      this.setData({
+        svgBase64: this.toUniqueBase64(this.data.traditionalSvg)
+      })
+    }
+  },
+  toUniqueBase64(svgCode) {
+    const uniqueMark = `<!-- unique mark: ${Date.now()} -->\n`
+    return `data:image/svg+xml;base64,${Base64.encode(uniqueMark + svgCode)}`
+  },
+  //  显示简体字。找到了重画svg的方法，在svg代码头上加上当前时间，来避免svg一样，从而绕过缓存。
   switchToSimple() {
     if (!this.data.isSimple) {
-      // 实在找不到重新播放svg动画的方法，只能refresh整个页面。
-      wx.redirectTo({
-        url: '/pages/strokeOrder/strokeOrder'
+      this.setData({
+        svgBase64: this.toUniqueBase64(this.data.simpleSvg),
+        isSimple: true
       })
     }
   },
@@ -27,9 +45,13 @@ Page({
   switchToTraditional() {
     if (this.data.isSimple && this.data.hasTraditional) {
       this.setData({
+        svgBase64: this.toUniqueBase64(this.data.traditionalSvg),
         isSimple: false
       })
     }
+  },
+  tapSvg() {
+    this.reStartAnimation()
   },
   search() {
     wx.navigateTo({
@@ -43,15 +65,26 @@ Page({
   },
   // 从 app.js 中同步数据
   syncData() {
-    const _process = item => `data:image/svg+xml;base64,${Base64.encode(item)}`
     // 从gloablData中同步过来
     const app = getApp()
     app.getGlobalStrokeOrder().then(resp => {
+      let svgBase64 = ''
+      let isSimple = true
+      // 当前模式为繁体，而且下一个字符有繁体，才显示繁体。不然显示简体。
+      if (!this.data.isSimple && resp.hasTraditional) {
+        svgBase64 = this.toUniqueBase64(resp.traditional.svgCodes)
+        isSimple = false
+      } else {
+        svgBase64 = this.toUniqueBase64(resp.simple.svgCodes)
+        isSimple = true
+      }
       this.setData({
         hasTraditional: resp.hasTraditional,
         character: resp.inputChar,
-        simpleSvg: _process(resp.simple.svgCodes),
-        traditionalSvg: resp.hasTraditional ? _process(resp.traditional.svgCodes) : ''
+        svgBase64: svgBase64,
+        simpleSvg: resp.simple.svgCodes,
+        traditionalSvg: resp.hasTraditional ? resp.traditional.svgCodes : '',
+        isSimple: isSimple
       })
     })
   },

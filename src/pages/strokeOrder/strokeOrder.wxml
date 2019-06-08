@@ -1,7 +1,7 @@
 <!-- pages/strokeOrder/strokeOrder.wxml -->
 <!-- 笔顺动画展示区 -->
 <view class="main">
-    <image src='{{isSimple?simpleSvg:traditionalSvg}}' class="block-fill"/>
+    <image bindtap='tapSvg' src='{{svgBase64}}' class="block-fill"/>
 </view>
 <!-- 繁、简体切换区 -->
 <view class="middle">
