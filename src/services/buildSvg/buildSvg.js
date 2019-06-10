@@ -22,9 +22,10 @@ function getStrokeLen(path) {
  *  慢：14s
  *  中：9s
  *  快：5s
+ *  超快：2.25s
  * 
  * @param {*} strokeLen 笔画长度
- * @param {*} speed 动画的速度，0-慢，1-普通，2-快
+ * @param {*} speed 动画的速度，0-慢，1-普通，2-快，3-超快
  */
 function getStrokeDrawTime(strokeLen, speed = 1) {
     let a = 0.07; // 系数
@@ -35,6 +36,9 @@ function getStrokeDrawTime(strokeLen, speed = 1) {
     } else if (2 == speed) {
         a = 0.04
         b = 0.05
+    }else if (3 == speed) {
+        a = 0.02
+        b = 0.02
     }
     return Math.sqrt(strokeLen) * a + b;
 }
@@ -45,6 +49,7 @@ function getStrokeDrawTime(strokeLen, speed = 1) {
  * @param {*} 配置信息
  */
 function buildSvg({ medians, strokes }, {
+    background = buildSVGDefault.background,
     withAnimation = buildSVGDefault.widthAnimaiton,
     beforeDrawColor = buildSVGDefault.beforeDrawColor,
     penColor = buildSVGDefault.penColor,
@@ -56,13 +61,15 @@ function buildSvg({ medians, strokes }, {
     const svgCode = []
     svgCode.push(`<svg version="1.1" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">`)
     // 背景田字格
-    svgCode.push(`  <g stroke="lightgray" stroke-dasharray="1,1" stroke-width="1" transform="scale(4, 4)">
+    if (background) {
+        svgCode.push(`  <g stroke="lightgray" stroke-dasharray="1,1" stroke-width="1" transform="scale(4, 4)">
     <line x1="0" y1="0" x2="256" y2="256"></line>
     <line x1="256" y1="0" x2="0" y2="256"></line>
     <line x1="128" y1="0" x2="128" y2="256"></line>
     <line x1="0" y1="128" x2="256" y2="128"></line>
-  </g>
-  <g transform="scale(1, -1) translate(0, -900)">`)
+  </g>`)
+    }
+    svgCode.push(`  <g transform="scale(1, -1) translate(0, -900)">`)
     // 笔画轮廓
     for (let i = 0; i < strokes.length; ++i) {
         svgCode.push(`    <path d="${strokes[i]}" fill="${beforeDrawColor}"></path>`)

@@ -5,17 +5,51 @@ page {
     flex-flow: column;
 }
 
-.block-fill {
-    height: 100%;
-    width: 100%;
-}
-
-
 /* ----------------笔顺动画展示区---------------- */
 .main {
+    position: relative;
+    /* 750rpx 是微信定义的屏幕宽度，这里设置这个值，保证一个正方形 */
     height: 750rpx;
     border: 1px solid var(--theme-color);
     background-color: white;
+}
+.svg-container  {
+    height: 100%;
+    width: 100%;
+}
+/* 彩蛋相关（本来想写个SVG动画，但太复杂了，还是HTML简单） */
+
+
+@keyframes egg-main-0 {
+    from { transform: rotate(0); }
+    to { transform: rotate(360deg); }
+}
+
+.main-egg {
+    animation: egg-main-0 0.05s;
+    animation-delay: 6.5s;
+    animation-iteration-count: 64;
+    background-color: transparent;
+}
+
+.svg-container-egg {
+    transform: scale(0.7);
+}
+
+@keyframes egg-bg-0{
+    from { transform: rotate(0); }
+    to { transform: rotate(45deg); }
+}
+#egg-bg {
+    position: absolute;
+    background-color: var(--theme-color);
+    top: 110rpx;
+    left: 110rpx;
+    height: 530rpx;
+    width: 530rpx;
+    animation: egg-bg-0 0.7s ease both;
+    animation-delay: 0.5s;
+    z-index: -1;
 }
 
 /* ----------------繁、简体切换区---------------- */

@@ -14,7 +14,8 @@ Page({
     // 当前汉字的繁体svg代码
     traditionalSvg: '',
     // 当前汉字是否有对应的不同写法的繁体，没有的话，只展示简体。
-    hasTraditional: false
+    hasTraditional: false,
+    isEgg: false
   },
   // 重新开始播放当前动画
   reStartAnimation() {
@@ -22,7 +23,7 @@ Page({
       this.setData({
         svgBase64: this.toUniqueBase64(this.data.simpleSvg)
       })
-    }else {
+    } else {
       this.setData({
         svgBase64: this.toUniqueBase64(this.data.traditionalSvg)
       })
@@ -78,13 +79,35 @@ Page({
         svgBase64 = this.toUniqueBase64(resp.simple.svgCodes)
         isSimple = true
       }
+      /* 彩蛋 */
+      if (resp.inputChar === '福') {
+        this.setData({
+          hasTraditional: resp.hasTraditional,
+          character: resp.inputChar,
+          svgBase64: '',
+          simpleSvg: resp.simple.svgCodes,
+          traditionalSvg: resp.hasTraditional ? resp.traditional.svgCodes : '',
+          isSimple: isSimple,
+          isEgg: true
+        })
+        // 留一个 时间 给彩蛋动画
+        setTimeout(()=> {
+          this.setData({
+            svgBase64: svgBase64
+          })
+        }, 1300)
+        return
+      }
+
+      /* 彩蛋 */
       this.setData({
         hasTraditional: resp.hasTraditional,
         character: resp.inputChar,
         svgBase64: svgBase64,
         simpleSvg: resp.simple.svgCodes,
         traditionalSvg: resp.hasTraditional ? resp.traditional.svgCodes : '',
-        isSimple: isSimple
+        isSimple: isSimple,
+        isEgg: false
       })
     })
   },
@@ -111,6 +134,10 @@ Page({
    * Lifecycle function--Called when page hide
    */
   onHide: function () {
+    this.setData({
+      isEgg: false,
+      svgBase64: ''
+    })
   },
 
   /**

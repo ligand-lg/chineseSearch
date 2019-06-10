@@ -2,6 +2,7 @@
  * 生成 SVG 动画的基本配置
  */
 const svgConf = {
+  background: true,
   widthAnimaiton: true,
   beforeDrawColor: 'lightgray',
   penColor: '#e23e3b',

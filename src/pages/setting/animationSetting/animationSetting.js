@@ -14,7 +14,7 @@ Page({
    */
   data: {
     speedSelected: 1,
-    speedOpt: ['慢', '正常', '快'],
+    speedOpt: ['慢', '正常', '快', '超快'],
     penColorSelected: 0,
     penColorOpt: ['红色', '黑色', '蓝色'],
     truPenColors: ['#e23e3b', 'black', 'blue']

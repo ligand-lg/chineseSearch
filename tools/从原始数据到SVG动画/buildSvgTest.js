@@ -27,5 +27,5 @@ const test_case2 = {
 }
 
 
-const svg = buildSvg.buildSvg(test_case2)
+const svg = buildSvg.buildSvg(test_case)
 fs.writeFile(path.join(__dirname, 'test.svg'), svg, () => console.log('done'))

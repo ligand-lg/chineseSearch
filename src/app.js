@@ -44,11 +44,20 @@ App({
       traditional: '',
     }
 
+    /* 彩蛋 */
+    const buildSvgConf = {}
+    if (character === '福') {
+      buildSvgConf.background = false
+      buildSvgConf.penColor = 'black'
+      buildSvgConf.speed = 3
+    }
+    /* 彩蛋 */
+
     this.globalData.requestsPromise = new Promise((resolve, reject) => {
       /* 请求成功调用  */
       let _requestRemainder = hasTraditional ? 2 : 1
       const requestFinish = (resp, isSimple) => {
-        const svgCodes = buildSvg(resp)
+        const svgCodes = buildSvg(resp, buildSvgConf)
         if (isSimple) {
           ans.simple = {
             char: simpleChar,
