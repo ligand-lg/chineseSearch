@@ -86,7 +86,9 @@ function rawAnalysis() {
 }
 
 // --------------------------- Runner ------------------------------
+// 离线字挑选,常用简体3500个字 + 对应繁体1534 个字, 共5034个字
 compress.selected_zip(readRawData(), 8)
+
 // console.log(compress.getChunkNum())
 
 // compress.findLocal('刚')
