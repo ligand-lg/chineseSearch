@@ -22,13 +22,13 @@ page {
 
 @keyframes egg-main-0 {
     from { transform: rotate(0); }
-    to { transform: rotate(360deg); }
+    to { transform: rotate(180deg); }
 }
 
 .main-egg {
-    animation: egg-main-0 0.05s;
+    animation: egg-main-0 0.05s both;
     animation-delay: 6.5s;
-    animation-iteration-count: 64;
+    animation-iteration-count: 63;
     background-color: transparent;
 }
 
