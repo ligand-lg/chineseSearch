@@ -242,7 +242,7 @@ function encode({ character, strokes, medians }) {
 function decode(uint16_buf, character) {
   /* 1. 首尾校验。二进制数据以 characterCode 开头，以 CONTORLS.end 结尾 */
   if (decode_character(uint16_buf[0]) !== character) {
-    const errMsg = `解码校验失败: buf 应该以字符：'${character}' 开头`
+    const errMsg = `解码校验失败: buf 应该以字符：'${character}/${encode_character(character)}' 开头, 缓存中开头为${uint16_buf[0]}`
     console.log(errMsg)
     throw errMsg
   }

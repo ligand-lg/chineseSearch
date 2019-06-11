@@ -89,7 +89,7 @@ function zip(rawDataArray, chunkNum = 16) {
       const characterCode = Coder.encode_character(rawDataArray[cnt].character)
       const uint16 = Coder.encode(rawDataArray[cnt])
       const buf = new Uint8Array(uint16.buffer)
-      fs.write(fd, buf, err => { if (err) { console.err(err) } })
+      fs.writeSync(fd, buf)
 
       // 更新索引
       index.push([characterCode, chunkId, offset, uint16.length])
@@ -120,7 +120,7 @@ function zip(rawDataArray, chunkNum = 16) {
     },
     index
   })
-  fs.writeFile(filePath('./index.json'), index_str, err => { if (err) { console.log(err) } })
+  fs.writeFileSync(filePath('./index.json'), index_str)
 }
 
 /**
@@ -216,6 +216,7 @@ function getChunkNum() {
 exports.findLocal = findLocal
 exports.selected_zip = selected_zip
 exports.getChunkNum = getChunkNum
+exports.getIndex = getIndex
 
 // es6
 // export {

@@ -17,17 +17,21 @@ const min = (a, b) => a > b ? b : a
  * @param {*} filename 文件相对路径
  * @return json数组，没行为一条数据
  */
+let __readRawData = null
 function readRawData(filename = '../graphics-618dbab.txt') {
-  const res = []
-  const filePath = path.join(__dirname, filename)
-  for (const line of fs.readFileSync(filePath, 'utf8').split('\n')) {
-    try {
-      res.push(JSON.parse(line))
-    } catch (e) {
-      console.log(`json parse error: ${line}`)
+  if (__readRawData === null) {
+    const res = []
+    const filePath = path.join(__dirname, filename)
+    for (const line of fs.readFileSync(filePath, 'utf8').split('\n')) {
+      try {
+        res.push(JSON.parse(line))
+      } catch (e) {
+        console.log(`json parse error: ${line}`)
+      }
     }
+    __readRawData = res
   }
-  return res
+  return __readRawData
 }
 
 /**
@@ -85,19 +89,76 @@ function rawAnalysis() {
   console.log(`minNum: ${min_num}`)
 }
 
+let __rawData = null
+/**
+ * 校验数据
+ * @param {*} 待校验的数据
+ */
+function confirm({ character, strokes, medians }) {
+  if (__rawData === null) {
+    __rawData = {}
+    const rawData = readRawData()
+    for (const item of rawData) {
+      __rawData[item.character] = item
+    }
+  }
+  // 第一步获取原数据
+  const correctData = __rawData[character]
+  if (!correctData) {
+    console.log(`${character}有问题：原始数据中没有这个字`)
+    return false
+  }
+  // 校验 strokes
+  let i = 0
+  for (; i < strokes.length; ++i) {
+    if (strokes[i].slice(0, strokes[i].length - 1) !== correctData.strokes[i]) {
+      console.log(`${character}有问题：strokes[${i}]，原始：${correctData.strokes[i]}，给定：${strokes[i]}`)
+      return flase
+    }
+  }
+  // 校验 medians
+  i = 0
+  for (; i < medians.length; ++i) {
+    for (let j = 0; j < medians[i].length; ++j) {
+      const x1 = parseInt(medians[i][j][0]), y1 = parseInt(medians[i][j][1])
+      const x2 = parseInt(correctData.medians[i][j][0])
+      const y2 = parseInt(correctData.medians[i][j][1])
+      if (x1 !== x2) {
+        console.log(`${character}有问题：medians[${i}][${j}]，原始：${correctData.medians[i][j]}，给定：${medians[i][j]}`)
+        return false
+      }
+      if (y1 !== y2) {
+        console.log(`${character}有问题：medians[${i}][${j}]，原始：${correctData.medians[i][j]}，给定：${medians[i][j]}`)
+        return false
+      }
+    }
+  }
+  return true
+}
+
+/**
+ * 压缩完成后，测试所有的压缩字
+ */
+function zip_test() {
+  const index = compress.getIndex()
+  for (const item of index.index) {
+    const char = String.fromCharCode(item[0])
+    compress.findLocal(char)
+      .then(data => {
+        confirm(data)
+      })
+  }
+}
+
 // --------------------------- Runner ------------------------------
 // 离线字挑选,常用简体3500个字 + 对应繁体1534 个字, 共5034个字
 compress.selected_zip(readRawData(), 8)
+zip_test()
 
-// console.log(compress.getChunkNum())
 
-// compress.findLocal('刚')
-  // .then(data => {
-    // console.log(JSON.stringify(data))
-  // })
-  // .catch(err => {
-    // console.log(err)
-  // })
+// compress.findLocal('丁')
+//   .then((data) => {
+//     __confirm(data)
+//   })
 
-// zip(readRawData())
 // rawAnalysis()
